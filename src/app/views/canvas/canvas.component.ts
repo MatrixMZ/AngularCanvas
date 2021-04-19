@@ -33,6 +33,11 @@ export class CanvasComponent implements AfterViewInit {
     this.canvas.nativeElement.addEventListener('mousemove', this.onMouseClick);
   }
 
+  /**
+   * Goes thorugh entire node tree and updates each node value when mouse position is changed.
+   *
+   * @param event MouseEvent
+   */
   update(event: MouseEvent) {
     this.node?.update(event);
   }
@@ -42,13 +47,15 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   animate() {
+    this.node?.draw(this.ctx);
     // Do stuff
     requestAnimationFrame(this.animate.bind(this));
   }
 
   /**
    * Opens dialog form to create new node
-   * @returns Node
+   *
+   * @returns AnyNode
    */
   requestNode(x: number, y: number, level: number): AnyNode {
     return new DecisionNode(10, 10, 1, '123', '112', '12');
