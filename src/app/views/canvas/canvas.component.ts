@@ -39,7 +39,10 @@ export class CanvasComponent implements AfterViewInit {
     this.canvas.nativeElement.addEventListener('click', this.update);
     this.canvas.nativeElement.addEventListener('mousemove', this.onMouseClick);
 
-    this.node = this.requestNode(200, 200, 1);
+    this.requestNode(200, 200, 1).then((node) => {
+      this.node = node
+      console.log(node);
+    });
   }
 
   /**
@@ -70,14 +73,15 @@ export class CanvasComponent implements AfterViewInit {
    *
    * @returns AnyNode
    */
-  requestNode(x: number, y: number, level: number): AnyNode {
+  requestNode(x: number, y: number, level: number): Promise<AnyNode> {
     const dialogRef = this.dialog.open(AddNodeDialogComponent);
-
-    dialogRef.afterClosed().subscribe((result: boolean) => {
-      console.log(`Dialog result: ${result}`);
+    return new Promise<AnyNode>((resolve, reject) => {
+      dialogRef.afterClosed().subscribe((result: boolean) => {
+        resolve(new DecisionNode(10, 10, 1, '123', '112', '12'));
+      }, (error) => {
+        reject(error);
+      });
     });
-
-    return new DecisionNode(10, 10, 1, '123', '112', '12');
   }
 
 }

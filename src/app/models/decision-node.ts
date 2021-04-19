@@ -1,7 +1,7 @@
 import { AnyNode, Node } from './node.interface';
 
 
-export type NodeRequest = (x: number, y: number, level: number) => AnyNode;
+export type NodeRequest = (x: number, y: number, level: number) => Promise<AnyNode>;
 
 export class DecisionNode implements Node {
   radius = 50;
