@@ -1,4 +1,6 @@
-import { DecisionNode, NodeRequest } from './decision-node';
+import { DecisionNode } from './decision-node';
+
+export type NodeRequest = (x: number, y: number, level: number) => Promise<AnyNode>;
 
 export interface Node {
   onMouseClick(event: MouseEvent, nodeRequest: NodeRequest): void;
@@ -12,4 +14,4 @@ export enum NodeType {
   END = 'End node'
 }
 
-export type AnyNode = Node | DecisionNode;
+export type AnyNode = DecisionNode;

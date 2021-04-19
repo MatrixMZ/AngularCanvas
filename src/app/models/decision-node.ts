@@ -1,7 +1,5 @@
-import { AnyNode, Node } from './node.interface';
-
-
-export type NodeRequest = (x: number, y: number, level: number) => Promise<AnyNode>;
+import { getDistance } from '../extensions/canvas-calculations';
+import { AnyNode, Node, NodeRequest } from './node.interface';
 
 export class DecisionNode implements Node {
   radius = 50;
@@ -9,7 +7,6 @@ export class DecisionNode implements Node {
   rightNodeActive = false;
   left?: Node;
   right?: Node;
-
 
   constructor(
     public x: number,
@@ -21,14 +18,46 @@ export class DecisionNode implements Node {
   ) { }
 
   update(event: MouseEvent): void {
-    throw new Error('Method not implemented.');
+    let leftBranchDistance = getDistance(this.x + 200, event.clientX, this.y - 200, event.clientY);
+    if (leftBranchDistance <= this.radius) {
+      this.leftNodeActive = true;
+      return;
+    } else {
+      this.leftNodeActive = false;
+    }
+
+    let rightBranchDistance = getDistance(this.x + 200, event.clientX, this.y + 200, event.clientY);
+    if (rightBranchDistance <= this.radius) {
+      this.rightNodeActive = true;
+      return;
+    } else {
+      this.rightNodeActive = false;
+    }
+    this.left?.update(event);
+    this.right?.update(event);
   }
 
   onMouseClick(event: MouseEvent, nodeRequest: NodeRequest): void {
-    throw new Error('Method not implemented.');
+    if(getDistance(this.x + 200, event.clientX, this.y - 200, event.clientY) <= this.radius) {
+      nodeRequest(this.x + 200, this.y - 200, this.level + 1).then((node) => {
+        this.left = node
+      });
+      return;
+    }
+
+    if(getDistance(this.x + 200, event.clientX, this.y + 200, event.clientY) <= this.radius) {
+      nodeRequest(this.x + 200, this.y + 200, this.level + 1).then((node) => {
+        this.left = node
+      });
+    }
   }
 
   draw(ctx: any): void {
+
+    if (this.leftNodeActive) {
+      //
+    }
+
     ctx.arc(this.x + this.radius, this.y, this.radius, 0, 2 * Math.PI);
     ctx.fillStyle = 0x123123;
     ctx.fill();
