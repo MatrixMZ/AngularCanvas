@@ -1,4 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, NgZone, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { AddNodeDialogComponent } from 'src/app/components/add-node-dialog/add-node-dialog.component';
 import { DecisionNode } from 'src/app/models/decision-node';
 import { AnyNode, Node } from 'src/app/models/node.interface';
 
@@ -18,19 +20,26 @@ export class CanvasComponent implements AfterViewInit {
   @HostListener('window:resize', ['event'])
   onResize() {
     this.canvasWidth = window.innerWidth;
-    this.canvasHeight = window.innerHeight - 64;
+    this.canvasHeight = window.innerHeight; // - 64
     this.canvas.nativeElement.setAttribute('width', String(this.canvasWidth));
     this.canvas.nativeElement.setAttribute('height', String(this.canvasHeight));
   }
 
-  constructor(private ngZone: NgZone) { }
+  constructor(
+    private ngZone: NgZone,
+    public dialog: MatDialog
+  ) { }
 
   ngAfterViewInit(): void {
     this.onResize();
     this.ctx = this.canvas.nativeElement.getContext('2d');
+
+    // NgZone used for better performance.
     this.ngZone.runOutsideAngular(() => this.animate());
     this.canvas.nativeElement.addEventListener('click', this.update);
     this.canvas.nativeElement.addEventListener('mousemove', this.onMouseClick);
+
+    this.node = this.requestNode(200, 200, 1);
   }
 
   /**
@@ -46,9 +55,13 @@ export class CanvasComponent implements AfterViewInit {
     this.node?.onMouseClick(event, this.requestNode);
   }
 
+  /**
+   * Recurrency function draws graph on each loop.
+   */
   animate() {
+    this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     this.node?.draw(this.ctx);
-    // Do stuff
+
     requestAnimationFrame(this.animate.bind(this));
   }
 
@@ -58,6 +71,12 @@ export class CanvasComponent implements AfterViewInit {
    * @returns AnyNode
    */
   requestNode(x: number, y: number, level: number): AnyNode {
+    const dialogRef = this.dialog.open(AddNodeDialogComponent);
+
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      console.log(`Dialog result: ${result}`);
+    });
+
     return new DecisionNode(10, 10, 1, '123', '112', '12');
   }
 

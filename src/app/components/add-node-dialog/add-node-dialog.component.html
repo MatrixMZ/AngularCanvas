@@ -1,1 +1,8 @@
-<p>add-node-dialog works!</p>
+<h2 mat-dialog-title>Example form.</h2>
+<mat-dialog-content class="mat-typography">
+  <p>Example content.</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button [mat-dialog-close]="false">Cancel</button>
+  <button [mat-dialog-close]="true" cdkFocusInitial>Install</button>
+</mat-dialog-actions>

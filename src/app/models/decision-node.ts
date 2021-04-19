@@ -29,7 +29,10 @@ export class DecisionNode implements Node {
   }
 
   draw(ctx: any): void {
-    throw new Error('Method not implemented.');
+    ctx.arc(this.x + this.radius, this.y, this.radius, 0, 2 * Math.PI);
+    ctx.fillStyle = 0x123123;
+    ctx.fill();
+    ctx.stroke();
   }
 
 }
