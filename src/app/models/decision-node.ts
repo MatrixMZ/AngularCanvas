@@ -23,7 +23,6 @@ export class DecisionNode implements Node {
     .clone()
     .add(new Vector(-branchLength, this.radius * 3)); // shifting to left side
 
-    console.log('RIGHT:', newLeftNodePosition);
     this.leftNodeButton = new ButtonNode(newLeftNodePosition, (newNodePosition: Vector) => {
       requestNode(newNodePosition, newBranchLendth).then((node) => {
         this.left = node;
@@ -34,7 +33,6 @@ export class DecisionNode implements Node {
     .clone()
     .add(new Vector(branchLength, this.radius * 3));
 
-    console.log('RIGHT:', newRightNodePosition);
     this.rightNodeButton = new ButtonNode(newRightNodePosition, (newNodePosition: Vector) => {
       requestNode(newNodePosition, newBranchLendth).then((node) => {
         this.right = node;
@@ -70,11 +68,13 @@ export class DecisionNode implements Node {
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
+    // LINE TO LEFT NODE
     ctx.beginPath();
-    ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI);
-    ctx.fillStyle = 'gray';
-    ctx.fill();
+    ctx.moveTo(this.position.x, this.position.y);
+    ctx.lineTo(this.leftNodeButton.position.x, this.leftNodeButton.position.y);
     ctx.stroke();
+
+    // LEFT NODE OR BUTTON
 
     if (this.left != null) {
       this.left?.draw(ctx);
@@ -82,11 +82,26 @@ export class DecisionNode implements Node {
       this.leftNodeButton.draw(ctx, this.position);
     }
 
+    // LINE TO RIGHT NODE
+    ctx.beginPath();
+    ctx.moveTo(this.position.x, this.position.y);
+    ctx.lineTo(this.rightNodeButton.position.x, this.rightNodeButton.position.y);
+    ctx.stroke();
+
+    // RIGHT NODE OR BUTTON
+
     if (this.right != null) {
       this.right?.draw(ctx);
     } else {
       this.rightNodeButton.draw(ctx, this.position);
     }
+
+    // NODE ITSELF
+    ctx.beginPath();
+    ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI);
+    ctx.fillStyle = 'gray';
+    ctx.fill();
+    ctx.stroke();
   }
 
 }
