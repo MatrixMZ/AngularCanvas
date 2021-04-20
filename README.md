@@ -2,10 +2,12 @@
 
 ## Instalation
 
-`cd path/to/your/foler`
-`git clone git@github.com:MatrixMZ/AngularCanvas.git`
-`cd AngularCanvas/`
-`npm install`
+```
+cd path/to/your/foler
+git clone git@github.com:MatrixMZ/AngularCanvas.git
+cd AngularCanvas/
+npm install
+```
 
 
 ## Development server
