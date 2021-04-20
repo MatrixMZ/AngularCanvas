@@ -2,6 +2,7 @@
 
 ## Instalation
 
+Run in terminal:
 ```
 cd path/to/your/foler
 git clone git@github.com:MatrixMZ/AngularCanvas.git
