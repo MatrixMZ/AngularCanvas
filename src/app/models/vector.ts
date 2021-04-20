@@ -80,4 +80,12 @@
       this.y /= m;
       return this;
   }
+
+  /**
+   * Copies vector data and creates new to remove reference between objects.
+   * @returns Vector with removed reference
+   */
+  clone(): Vector {
+    return new Vector(this.x, this.y);
+  }
 }

@@ -34,7 +34,7 @@ export class ButtonNode {
     // TODO: Draw Line from parent to button
 
     ctx.beginPath();
-    ctx.arc(this.position.x + this.radius, this.position.y, this.radius, 0, 2 * Math.PI);
+    ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI);
     ctx.fillStyle = this.isActive ? 'teal' : '#EEEEEE';
     ctx.fill();
     ctx.stroke();
