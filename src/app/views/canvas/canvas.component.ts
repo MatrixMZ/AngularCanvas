@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddNodeDialogComponent } from 'src/app/components/add-node-dialog/add-node-dialog.component';
 import { DecisionNode } from 'src/app/models/decision-node';
 import { AnyNode, Node } from 'src/app/models/node.interface';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-canvas',
@@ -15,7 +16,7 @@ export class CanvasComponent implements AfterViewInit {
   canvasWidth!: number;
   canvasHeight!: number;
 
-  node?: Node;
+  node?: Node = null;
 
   @HostListener('window:resize', ['event'])
   onResize() {
@@ -27,22 +28,30 @@ export class CanvasComponent implements AfterViewInit {
 
   constructor(
     private ngZone: NgZone,
-    public dialog: MatDialog
+    private dialog: MatDialog
   ) { }
 
   ngAfterViewInit(): void {
     this.onResize();
+
+
+
     this.ctx = this.canvas.nativeElement.getContext('2d');
 
     // NgZone used for better performance.
     this.ngZone.runOutsideAngular(() => this.animate());
-    this.canvas.nativeElement.addEventListener('click', this.update);
-    this.canvas.nativeElement.addEventListener('mousemove', this.onMouseClick);
+    this.canvas.nativeElement.addEventListener('click', (event) => {
+      this.onMouseClick(event);
+    });
+    this.canvas.nativeElement.addEventListener('mousemove', (event) => {
+      this.update(event);
+    });
 
     this.requestNode(200, this.canvasHeight / 2, 1).then((node) => {
-      this.node = node
+      this.node = node;
       console.log(node);
     });
+
   }
 
   /**
@@ -50,18 +59,18 @@ export class CanvasComponent implements AfterViewInit {
    *
    * @param event MouseEvent
    */
-  update(event: MouseEvent) {
+  private update(event: MouseEvent) {
     this.node?.update(event);
   }
 
-  onMouseClick(event: MouseEvent) {
-    this.node?.onMouseClick(event, this.requestNode);
+  private onMouseClick(event: MouseEvent) {
+    this.node?.handleMouseClick(event);
   }
 
   /**
    * Recurrency function draws graph on each loop.
    */
-  animate() {
+  private animate() {
     this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     this.node?.draw(this.ctx);
 
@@ -75,13 +84,10 @@ export class CanvasComponent implements AfterViewInit {
    */
   requestNode(x: number, y: number, level: number): Promise<AnyNode> {
     const dialogRef = this.dialog.open(AddNodeDialogComponent);
-    return new Promise<AnyNode>((resolve, reject) => {
-      dialogRef.afterClosed().subscribe((result: boolean) => {
-        resolve(new DecisionNode(x, y, level, '123', '112', '12'));
-      }, (error) => {
-        reject(error);
-      });
-    });
+
+    return dialogRef.afterClosed().pipe(map((form) => {
+      return new DecisionNode(x, y, level, '123', '112', '12', this.requestNode.bind(this));
+    })).toPromise<AnyNode>();
   }
 
 }

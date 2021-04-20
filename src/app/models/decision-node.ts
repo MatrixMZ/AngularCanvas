@@ -1,10 +1,10 @@
-import { getDistance } from '../extensions/canvas-calculations';
-import { AnyNode, Node, NodeRequest } from './node.interface';
+import { ButtonNode } from './button-node';
+import { Node, NodeRequest } from './node.interface';
 
 export class DecisionNode implements Node {
   radius = 50;
-  leftNodeActive = false;
-  rightNodeActive = false;
+  leftNodeButton: ButtonNode;
+  rightNodeButton: ButtonNode;
   left?: Node;
   right?: Node;
 
@@ -14,54 +14,55 @@ export class DecisionNode implements Node {
     public level: number,
     public title: string,
     public leftBranch: string,
-    public rightBranch: string
-  ) { }
+    public rightBranch: string,
+    public requestNode: NodeRequest
+  ) {
+    this.leftNodeButton = new ButtonNode(x + 200, y - 200, (positionX, positionY) => {
+      requestNode(positionX, positionY, level + 1).then((node) => {
+        this.left = node;
+      });
+    });
+
+    this.rightNodeButton = new ButtonNode(x + 200, y + 200, (positionX, positionY) => {
+      requestNode(positionX, positionY, level + 1).then((node) => {
+        this.right = node;
+      });
+    });
+  }
 
   update(event: MouseEvent): void {
-    let leftBranchDistance = getDistance(this.x + 200, event.clientX, this.y - 200, event.clientY);
-    if (leftBranchDistance <= this.radius) {
-      this.leftNodeActive = true;
-      return;
-    } else {
-      this.leftNodeActive = false;
-    }
+    // Update buttons
+    this.leftNodeButton.update(event);
+    this.rightNodeButton.update(event);
 
-    let rightBranchDistance = getDistance(this.x + 200, event.clientX, this.y + 200, event.clientY);
-    if (rightBranchDistance <= this.radius) {
-      this.rightNodeActive = true;
-      return;
-    } else {
-      this.rightNodeActive = false;
-    }
+    // Update children
     this.left?.update(event);
     this.right?.update(event);
   }
 
-  onMouseClick(event: MouseEvent, nodeRequest: NodeRequest): void {
-    if(getDistance(this.x + 200, event.clientX, this.y - 200, event.clientY) <= this.radius) {
-      nodeRequest(this.x + 200, this.y - 200, this.level + 1).then((node) => {
-        this.left = node
-      });
-      return;
-    }
-
-    if(getDistance(this.x + 200, event.clientX, this.y + 200, event.clientY) <= this.radius) {
-      nodeRequest(this.x + 200, this.y + 200, this.level + 1).then((node) => {
-        this.left = node
-      });
-    }
+  handleMouseClick(event: MouseEvent): void {
+    this.leftNodeButton.handleMouseClick(event);
+    this.rightNodeButton.handleMouseClick(event);
   }
 
-  draw(ctx: any): void {
-
-    if (this.leftNodeActive) {
-      //
-    }
-
+  draw(ctx: CanvasRenderingContext2D): void {
+    ctx.beginPath();
     ctx.arc(this.x + this.radius, this.y, this.radius, 0, 2 * Math.PI);
-    ctx.fillStyle = 0x123123;
+    ctx.fillStyle = 'gray';
     ctx.fill();
     ctx.stroke();
+
+    if (this.left != null) {
+      this.left?.draw(ctx);
+    } else {
+      this.leftNodeButton.draw(ctx, this.x, this.y);
+    }
+
+    if (this.right != null) {
+      this.right?.draw(ctx);
+    } else {
+      this.rightNodeButton.draw(ctx, this.x, this.y);
+    }
   }
 
 }
