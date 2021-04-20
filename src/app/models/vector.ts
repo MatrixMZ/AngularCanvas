@@ -21,19 +21,9 @@
    * Multiplies the vector on a given scale,
    * it is used to extend or shorten vector
    */
-  scale(scale: number): Vector {
+  mult(scale: number): Vector {
       this.x *= scale;
       this.y *= scale;
-      return this;
-  }
-
-  /**
-   * Multiplies the vector
-   * TODO: FIX DOCS
-   */
-   mult(scale: Vector): Vector {
-      this.x *= scale.x;
-      this.y *= scale.y;
       return this;
   }
 

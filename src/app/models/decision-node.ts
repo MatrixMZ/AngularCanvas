@@ -1,4 +1,4 @@
-import { circle, line } from '../extensions/canvas.extension';
+import { circle, label, line, lineLabel } from '../extensions/canvas.extension';
 import { ButtonNode } from './button-node';
 import { Node, NodeRequest } from './node.interface';
 import { Vector } from './vector';
@@ -73,7 +73,6 @@ export class DecisionNode implements Node {
     line(ctx, this.position, this.leftNodeButton.position);
 
     // LEFT NODE OR BUTTON
-
     if (this.left != null) {
       this.left?.draw(ctx);
     } else {
@@ -84,12 +83,16 @@ export class DecisionNode implements Node {
     line(ctx, this.position, this.rightNodeButton.position);
 
     // RIGHT NODE OR BUTTON
-
     if (this.right != null) {
       this.right?.draw(ctx);
     } else {
       this.rightNodeButton.draw(ctx, this.position);
     }
+
+    // LABELS
+    // console.log(this.leftNodeButton.position.clone().sub(this.position));
+    label(ctx, this.leftBranch, this.leftNodeButton.position.clone().add(this.position).mult(0.5));
+    label(ctx, this.rightBranch, this.rightNodeButton.position.clone().add(this.position).mult(0.5));
 
     // NODE ITSELF
     circle(ctx, this.position, this.radius);
