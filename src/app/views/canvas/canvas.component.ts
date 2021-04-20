@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, ElementRef, HostListener, NgZone, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddNodeDialogComponent } from 'src/app/components/add-node-dialog/add-node-dialog.component';
-import { DecisionNode } from 'src/app/models/decision-node';
+import { DecisionNode } from 'src/app/models/decision.node';
 import { AnyNode, Node } from 'src/app/models/node.interface';
 import { map } from 'rxjs/operators';
 import { Vector } from 'src/app/models/vector';
+import { EndNode } from 'src/app/models/end.node';
 
 @Component({
   selector: 'app-canvas',
@@ -80,12 +81,16 @@ export class CanvasComponent implements AfterViewInit {
    *
    * @returns AnyNode
    */
-  requestNode(position: Vector, level: number): Promise<AnyNode> {
+  requestNode(position: Vector, branchLength: number): Promise<AnyNode> {
     const dialogRef = this.dialog.open(AddNodeDialogComponent);
 
     // TODO: Convert form data to new Node
-    return dialogRef.afterClosed().pipe(map((form) => {
-      return new DecisionNode(position, level, '123', '112', '12', this.requestNode.bind(this));
+    return dialogRef.afterClosed().pipe(map((form: boolean) => {
+      if (form) {
+        return new DecisionNode(position, branchLength, 'Decision node', 'YES', 'NO', this.requestNode.bind(this));
+      } else {
+        return new EndNode(position, 'End node');
+      }
     })).toPromise<AnyNode>();
   }
 

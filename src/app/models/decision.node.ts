@@ -1,5 +1,5 @@
 import { circle, label, line, lineLabel } from '../extensions/canvas.extension';
-import { ButtonNode } from './button-node';
+import { ButtonNode } from './button.node';
 import { Node, NodeRequest } from './node.interface';
 import { Vector } from './vector';
 
@@ -96,6 +96,9 @@ export class DecisionNode implements Node {
 
     // NODE ITSELF
     circle(ctx, this.position, this.radius);
+
+    // title
+    label(ctx, this.title, this.position, 10);
   }
 
 }

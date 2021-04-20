@@ -1,4 +1,5 @@
-import { DecisionNode } from './decision-node';
+import { DecisionNode } from './decision.node';
+import { EndNode } from './end.node';
 import { Vector } from './vector';
 
 export type NodeRequest = (position: Vector, level: number) => Promise<AnyNode>;
@@ -17,4 +18,4 @@ export enum NodeType {
   END = 'End node'
 }
 
-export type AnyNode = DecisionNode;
+export type AnyNode = DecisionNode | EndNode;

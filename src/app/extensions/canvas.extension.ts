@@ -15,10 +15,10 @@ export function circle(ctx: CanvasRenderingContext2D, position: Vector, radius: 
   ctx.stroke();
 }
 
-export function label(ctx: CanvasRenderingContext2D, text: string, position: Vector) {
+export function label(ctx: CanvasRenderingContext2D, text: string, position: Vector, fontSize: number = 20) {
   ctx.fillStyle = '#FFFFFF';
   ctx.textAlign = 'center';
-  ctx.font = '20pt Helvetica';
+  ctx.font = `${fontSize}pt Helvetica`;
   ctx.fillText(text, position.x, position.y);
 }
 
