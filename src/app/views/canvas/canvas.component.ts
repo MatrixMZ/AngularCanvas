@@ -1,3 +1,6 @@
+import { ChanceNode } from './../../models/chance.node';
+import { EndNode } from './../../models/end.node';
+import { NodeType } from './../../models/node.interface';
 import { AfterViewInit, Component, ElementRef, HostListener, NgZone, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddNodeDialogComponent } from 'src/app/components/add-node-dialog/add-node-dialog.component';
@@ -5,7 +8,7 @@ import { DecisionNode } from 'src/app/models/decision.node';
 import { AnyNode, Node } from 'src/app/models/node.interface';
 import { map } from 'rxjs/operators';
 import { Vector } from 'src/app/models/vector';
-import { EndNode } from 'src/app/models/end.node';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-canvas',
@@ -85,11 +88,20 @@ export class CanvasComponent implements AfterViewInit {
     const dialogRef = this.dialog.open(AddNodeDialogComponent);
 
     // TODO: Convert form data to new Node
-    return dialogRef.afterClosed().pipe(map((form: boolean) => {
-      if (form) {
-        return new DecisionNode(position, branchLength, 'Decision node', 'YES', 'NO', this.requestNode.bind(this));
-      } else {
-        return new EndNode(position, 'End node');
+    return dialogRef.afterClosed().pipe(map((form: FormGroup | null) => {
+      if (form === null) {
+        return;
+      }
+      switch (form.value.nodeType) {
+        case NodeType.DECISION: {
+          return new DecisionNode(position, branchLength, form.value.nodeTitle, form.value.leftBranch, form.value.rightBranch, this.requestNode.bind(this));
+        }
+        case NodeType.CHANCE: {
+          return new ChanceNode(position, branchLength, form.value.nodeTitle, form.value.leftBranch, form.value.rightBranch, this.requestNode.bind(this));
+        }
+        case NodeType.END: {
+          return new EndNode(position, form.value.nodeTitle);
+        }
       }
     })).toPromise<AnyNode>();
   }

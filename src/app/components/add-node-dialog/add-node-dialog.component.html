@@ -1,8 +1,68 @@
-<h2 mat-dialog-title>Example form.</h2>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <h1 mat-dialog-title>Add New Nodes</h1>
+  <div mat-dialog-content>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <!-- mat select -->
+          <mat-form-field appearance="fill">
+            <mat-label>Node Type</mat-label>
+            <mat-select formControlName="nodeType" name="Node">
+              <mat-option value="decision">
+                Decision
+              </mat-option>
+              <mat-option value="chance">
+                Chance
+              </mat-option>
+              <mat-option value="end">
+                End
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field>
+            <mat-label>Node title</mat-label>
+            <input matInput formControlName="nodeTitle" maxLength="30">
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <!-- first node -->
+        <div class="col">
+          <h2>Left Branch</h2>
+          <mat-form-field>
+            <mat-label>Label</mat-label>
+            <input matInput formControlName="leftBranch" maxLength="30">
+          </mat-form-field>
+        </div>
+        <!-- second node -->
+        <div class="col">
+          <h2>Right Branch</h2>
+          <mat-form-field>
+            <mat-label>Label</mat-label>
+            <input matInput formControlName="rightBranch" maxLength="30">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+
+</div>
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="null">Cancel</button>
+  <button mat-button type="submit">Submit</button>
+</mat-dialog-actions>
+
+</form>
+
+<!-- <h2 mat-dialog-title>Example form.</h2>
 <mat-dialog-content class="mat-typography">
   <p>Example content.</p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button [mat-dialog-close]="false">Cancel</button>
   <button [mat-dialog-close]="true" cdkFocusInitial>Install</button>
-</mat-dialog-actions>
+</mat-dialog-actions> -->

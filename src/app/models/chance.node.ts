@@ -1,9 +1,9 @@
-import { label, line, rectange } from '../extensions/canvas.extension';
+import { circle, label, line, rectange } from '../extensions/canvas.extension';
 import { ButtonNode } from './button.node';
 import { Node, NodeRequest } from './node.interface';
 import { Vector } from './vector';
 
-export class DecisionNode implements Node {
+export class ChanceNode implements Node {
   radius = 50;
   leftNodeButton: ButtonNode;
   rightNodeButton: ButtonNode;
@@ -95,11 +95,11 @@ export class DecisionNode implements Node {
     label(ctx, this.rightBranch, this.rightNodeButton.position.clone().add(this.position).mult(0.5));
 
     // NODE ITSELF
-    rectange(ctx, this.title, this.position);
-    // circle(ctx, this.position, this.radius);
+    // rectange(ctx, this.title, this.position);
+    circle(ctx, this.position, this.radius);
 
     // title
-    // label(ctx, this.title, this.position, 10);
+    label(ctx, this.title, this.position, 10);
   }
 
 }

@@ -1,3 +1,4 @@
+import { ChanceNode } from './chance.node';
 import { DecisionNode } from './decision.node';
 import { EndNode } from './end.node';
 import { Vector } from './vector';
@@ -13,9 +14,9 @@ export interface Node {
 }
 
 export enum NodeType {
-  CHANCE = 'Chance node',
-  DECISION = 'Decision node',
-  END = 'End node'
+  CHANCE = 'chance',
+  DECISION = 'decision',
+  END = 'end'
 }
 
-export type AnyNode = DecisionNode | EndNode;
+export type AnyNode = DecisionNode | ChanceNode | EndNode;
