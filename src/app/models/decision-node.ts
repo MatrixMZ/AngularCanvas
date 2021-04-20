@@ -18,10 +18,10 @@ export class DecisionNode implements Node {
     public requestNode: NodeRequest
   ) {
     const newLeftNodePosition = this.position
-      .clone()
-      .add(new Vector(200, -200)) // moves to position
-      .mult(new Vector(1, 1.2)); // x,y scale
+    .clone() // copying
+    .add(new Vector(100, 0).rotate(-0.1)); // shifting & rotating
 
+    console.log('RIGHT:', newLeftNodePosition);
     this.leftNodeButton = new ButtonNode(newLeftNodePosition, (newNodePosition: Vector) => {
       requestNode(newNodePosition, level + 1).then((node) => {
         this.left = node;
@@ -30,9 +30,11 @@ export class DecisionNode implements Node {
 
     const newRightNodePosition = this.position
       .clone()
-      .add(new Vector(200, +200)) // moves to position
-      .mult(new Vector(1, 0.9)); // x,y scale
-    this.rightNodeButton = new ButtonNode(new Vector(position.x + 200, position.y + 200), (newNodePosition: Vector) => {
+      .add(new Vector(100, +100)) // moves to position
+      .mult(new Vector(1, .9)); // x,y scale
+
+    console.log('RIGHT:', newRightNodePosition);
+    this.rightNodeButton = new ButtonNode(newRightNodePosition, (newNodePosition: Vector) => {
       requestNode(newNodePosition, level + 1).then((node) => {
         this.right = node;
       });

@@ -88,4 +88,13 @@
   clone(): Vector {
     return new Vector(this.x, this.y);
   }
+
+  // https://shiffman.net/general/2011/02/03/rotate-a-vector-processing-js/
+  rotate(theta: number): Vector {
+    const x: number = this.x;
+    this.x = this.x * Math.cos(theta) - this.y * Math.sin(theta);
+    this.y = x * Math.sin(theta) + this.y * Math.cos(theta);
+
+    return this;
+  }
 }

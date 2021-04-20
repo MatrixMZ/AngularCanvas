@@ -4,6 +4,8 @@ import { Vector } from './vector';
 export type NodeRequest = (position: Vector, level: number) => Promise<AnyNode>;
 
 export interface Node {
+  position: Vector;
+
   handleMouseClick(mousePosition: Vector): void;
   update(mousePosition: Vector): void;
   draw(ctx: CanvasRenderingContext2D): void;
