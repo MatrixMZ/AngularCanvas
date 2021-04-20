@@ -12,7 +12,7 @@
   /**
    * Sets the new attributes to the vector
    */
-  set(x: number, y: number) {
+  set(x: number, y: number): void {
       this.x = x;
       this.y = y;
   }
@@ -21,9 +21,19 @@
    * Multiplies the vector on a given scale,
    * it is used to extend or shorten vector
    */
-  mult(scale: number) {
+  scale(scale: number): Vector {
       this.x *= scale;
       this.y *= scale;
+      return this;
+  }
+
+  /**
+   * Multiplies the vector
+   * TODO: FIX DOCS
+   */
+   mult(scale: Vector): Vector {
+      this.x *= scale.x;
+      this.y *= scale.y;
       return this;
   }
 
@@ -31,7 +41,7 @@
    * Adding vector can help with for example
    * to change the position vector with the given velocity vector.
    */
-  add(vector: Vector) {
+  add(vector: Vector): Vector {
       this.x += vector.x;
       this.y += vector.y;
       return this;
@@ -41,7 +51,7 @@
    * It is to take the direction vector by
    * subtracting vector position 1 by vector position 2.
    */
-  sub(vector: Vector) {
+  sub(vector: Vector): Vector {
       this.x -= vector.x;
       this.y -= vector.y;
       return this;
@@ -50,8 +60,12 @@
   /**
    * Returns the direction length (used to measure the distance between two vectors)
    */
-  mag() {
+  mag(): number {
       return Math.sqrt(this.x * this.x + this.y * this.y);
+  }
+
+  distance(vector: Vector): number {
+    return Math.sqrt(Math.pow(this.x - vector.x, 2) + Math.pow(this.y - vector.y, 2));
   }
 
   /**
@@ -60,7 +74,7 @@
    * move the player direction and multiply (.mult()) it
    * to apply the specified speed in given direction.
    */
-  normalize() {
+  normalize(): Vector {
       const m = this.mag();
       this.x /= m;
       this.y /= m;

@@ -1,10 +1,11 @@
 import { DecisionNode } from './decision-node';
+import { Vector } from './vector';
 
-export type NodeRequest = (x: number, y: number, level: number) => Promise<AnyNode>;
+export type NodeRequest = (position: Vector, level: number) => Promise<AnyNode>;
 
 export interface Node {
-  handleMouseClick(event: MouseEvent): void;
-  update(event: MouseEvent): void;
+  handleMouseClick(mousePosition: Vector): void;
+  update(mousePosition: Vector): void;
   draw(ctx: CanvasRenderingContext2D): void;
 }
 

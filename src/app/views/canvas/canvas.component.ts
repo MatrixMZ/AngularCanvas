@@ -4,6 +4,7 @@ import { AddNodeDialogComponent } from 'src/app/components/add-node-dialog/add-n
 import { DecisionNode } from 'src/app/models/decision-node';
 import { AnyNode, Node } from 'src/app/models/node.interface';
 import { map } from 'rxjs/operators';
+import { Vector } from 'src/app/models/vector';
 
 @Component({
   selector: 'app-canvas',
@@ -13,17 +14,16 @@ import { map } from 'rxjs/operators';
 export class CanvasComponent implements AfterViewInit {
   @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
   ctx!: CanvasRenderingContext2D;
-  canvasWidth!: number;
-  canvasHeight!: number;
+  canvasSize: Vector;
 
   node?: Node = null;
 
   @HostListener('window:resize', ['event'])
   onResize() {
-    this.canvasWidth = window.innerWidth;
-    this.canvasHeight = window.innerHeight; // - 64
-    this.canvas.nativeElement.setAttribute('width', String(this.canvasWidth));
-    this.canvas.nativeElement.setAttribute('height', String(this.canvasHeight));
+    this.canvasSize = new Vector(window.innerWidth, window.innerHeight);
+
+    this.canvas.nativeElement.setAttribute('width', String(this.canvasSize.x));
+    this.canvas.nativeElement.setAttribute('height', String(this.canvasSize.y));
   }
 
   constructor(
@@ -34,20 +34,18 @@ export class CanvasComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.onResize();
 
-
-
     this.ctx = this.canvas.nativeElement.getContext('2d');
 
     // NgZone used for better performance.
     this.ngZone.runOutsideAngular(() => this.animate());
     this.canvas.nativeElement.addEventListener('click', (event) => {
-      this.onMouseClick(event);
+      this.onMouseClick(new Vector(event.clientX, event.clientY));
     });
     this.canvas.nativeElement.addEventListener('mousemove', (event) => {
-      this.update(event);
+      this.update(new Vector(event.clientX, event.clientY));
     });
 
-    this.requestNode(200, this.canvasHeight / 2, 1).then((node) => {
+    this.requestNode(new Vector(this.canvasSize.x / 5, this.canvasSize.y / 2), 1).then((node) => {
       this.node = node;
       console.log(node);
     });
@@ -59,19 +57,19 @@ export class CanvasComponent implements AfterViewInit {
    *
    * @param event MouseEvent
    */
-  private update(event: MouseEvent) {
-    this.node?.update(event);
+  private update(mousePosition: Vector) {
+    this.node?.update(mousePosition);
   }
 
-  private onMouseClick(event: MouseEvent) {
-    this.node?.handleMouseClick(event);
+  private onMouseClick(mousePosition: Vector) {
+    this.node?.handleMouseClick(mousePosition);
   }
 
   /**
    * Recurrency function draws graph on each loop.
    */
   private animate() {
-    this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+    this.ctx.clearRect(0, 0, this.canvasSize.x, this.canvasSize.y);
     this.node?.draw(this.ctx);
 
     requestAnimationFrame(this.animate.bind(this));
@@ -82,11 +80,12 @@ export class CanvasComponent implements AfterViewInit {
    *
    * @returns AnyNode
    */
-  requestNode(x: number, y: number, level: number): Promise<AnyNode> {
+  requestNode(position: Vector, level: number): Promise<AnyNode> {
     const dialogRef = this.dialog.open(AddNodeDialogComponent);
 
+    // TODO: Convert form data to new Node
     return dialogRef.afterClosed().pipe(map((form) => {
-      return new DecisionNode(x, y, level, '123', '112', '12', this.requestNode.bind(this));
+      return new DecisionNode(position, level, '123', '112', '12', this.requestNode.bind(this));
     })).toPromise<AnyNode>();
   }
 

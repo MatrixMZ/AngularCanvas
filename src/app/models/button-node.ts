@@ -1,13 +1,13 @@
 import { getDistance } from '../extensions/canvas-calculations';
+import { Vector } from './vector';
 
 export class ButtonNode {
   isActive = false;
   radius = 30;
 
   constructor(
-    public x: number,
-    public y: number,
-    public onClick: (x: number, y: number) => void // should open dialog from parent class
+    public position: Vector,
+    public onClick: (position: Vector) => void // should open dialog from parent class
   ) { }
 
   /**
@@ -15,8 +15,8 @@ export class ButtonNode {
    *
    * @param event MouseEvent
    */
-  update(event: MouseEvent): void {
-    this.isActive = getDistance(this.x, event.clientX, this.y , event.clientY) <= this.radius;
+  update(mousePosition: Vector): void {
+    this.isActive = this.position.distance(mousePosition) <= this.radius;
   }
 
   /**
@@ -24,17 +24,17 @@ export class ButtonNode {
    *
    * @param event MouseEvent
    */
-  handleMouseClick(event: MouseEvent): void {
-    if (getDistance(this.x, event.clientX, this.y , event.clientY) <= this.radius) {
-      this.onClick(this.x, this.y);
+  handleMouseClick(mousePosition: Vector): void {
+    if (this.position.distance(mousePosition) <= this.radius) {
+      this.onClick(this.position);
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D, parentX: number, parentY: number): void {
+  draw(ctx: CanvasRenderingContext2D, parentPosition: Vector): void {
     // TODO: Draw Line from parent to button
 
     ctx.beginPath();
-    ctx.arc(this.x + this.radius, this.y, this.radius, 0, 2 * Math.PI);
+    ctx.arc(this.position.x + this.radius, this.position.y, this.radius, 0, 2 * Math.PI);
     ctx.fillStyle = this.isActive ? 'teal' : '#EEEEEE';
     ctx.fill();
     ctx.stroke();
