@@ -45,7 +45,7 @@ export class CanvasComponent implements AfterViewInit {
       this.update(new Vector(event.clientX, event.clientY));
     });
 
-    this.requestNode(new Vector(this.canvasSize.x / 5, this.canvasSize.y / 2), 1).then((node) => {
+    this.requestNode(new Vector(this.canvasSize.x / 2, this.canvasSize.y / 7), this.canvasSize.x / 4).then((node) => {
       this.node = node;
       console.log(node);
     });

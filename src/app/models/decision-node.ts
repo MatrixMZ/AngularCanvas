@@ -11,31 +11,32 @@ export class DecisionNode implements Node {
 
   constructor(
     public position: Vector,
-    public level: number,
+    public branchLength: number,
     public title: string,
     public leftBranch: string,
     public rightBranch: string,
     public requestNode: NodeRequest
   ) {
+
+    const newBranchLendth = (branchLength) / 2;
     const newLeftNodePosition = this.position
-    .clone() // copying
-    .add(new Vector(100, 0).rotate(-0.1)); // shifting & rotating
+    .clone()
+    .add(new Vector(-branchLength, this.radius * 3)); // shifting to left side
 
     console.log('RIGHT:', newLeftNodePosition);
     this.leftNodeButton = new ButtonNode(newLeftNodePosition, (newNodePosition: Vector) => {
-      requestNode(newNodePosition, level + 1).then((node) => {
+      requestNode(newNodePosition, newBranchLendth).then((node) => {
         this.left = node;
       });
     });
 
     const newRightNodePosition = this.position
-      .clone()
-      .add(new Vector(100, +100)) // moves to position
-      .mult(new Vector(1, .9)); // x,y scale
+    .clone()
+    .add(new Vector(branchLength, this.radius * 3));
 
     console.log('RIGHT:', newRightNodePosition);
     this.rightNodeButton = new ButtonNode(newRightNodePosition, (newNodePosition: Vector) => {
-      requestNode(newNodePosition, level + 1).then((node) => {
+      requestNode(newNodePosition, newBranchLendth).then((node) => {
         this.right = node;
       });
     });
