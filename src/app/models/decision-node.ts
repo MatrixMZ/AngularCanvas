@@ -1,3 +1,4 @@
+import { circle, line } from '../extensions/canvas.extension';
 import { ButtonNode } from './button-node';
 import { Node, NodeRequest } from './node.interface';
 import { Vector } from './vector';
@@ -69,10 +70,7 @@ export class DecisionNode implements Node {
 
   draw(ctx: CanvasRenderingContext2D): void {
     // LINE TO LEFT NODE
-    ctx.beginPath();
-    ctx.moveTo(this.position.x, this.position.y);
-    ctx.lineTo(this.leftNodeButton.position.x, this.leftNodeButton.position.y);
-    ctx.stroke();
+    line(ctx, this.position, this.leftNodeButton.position);
 
     // LEFT NODE OR BUTTON
 
@@ -83,10 +81,7 @@ export class DecisionNode implements Node {
     }
 
     // LINE TO RIGHT NODE
-    ctx.beginPath();
-    ctx.moveTo(this.position.x, this.position.y);
-    ctx.lineTo(this.rightNodeButton.position.x, this.rightNodeButton.position.y);
-    ctx.stroke();
+    line(ctx, this.position, this.rightNodeButton.position);
 
     // RIGHT NODE OR BUTTON
 
@@ -97,11 +92,7 @@ export class DecisionNode implements Node {
     }
 
     // NODE ITSELF
-    ctx.beginPath();
-    ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI);
-    ctx.fillStyle = 'gray';
-    ctx.fill();
-    ctx.stroke();
+    circle(ctx, this.position, this.radius);
   }
 
 }

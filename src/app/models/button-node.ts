@@ -1,4 +1,4 @@
-import { getDistance } from '../extensions/canvas-calculations';
+import { circle } from '../extensions/canvas.extension';
 import { Vector } from './vector';
 
 export class ButtonNode {
@@ -31,13 +31,7 @@ export class ButtonNode {
   }
 
   draw(ctx: CanvasRenderingContext2D, parentPosition: Vector): void {
-    // TODO: Draw Line from parent to button
-
-    ctx.beginPath();
-    ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI);
-    ctx.fillStyle = this.isActive ? 'teal' : '#EEEEEE';
-    ctx.fill();
-    ctx.stroke();
+    circle(ctx, this.position, this.radius, this.isActive ? 'teal' : '#EEEEEE');
   }
 
 }
